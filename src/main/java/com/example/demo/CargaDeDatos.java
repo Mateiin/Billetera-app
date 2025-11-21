@@ -70,6 +70,20 @@ public class CargaDeDatos implements CommandLineRunner {
         t3.setCuenta(cuenta);
         transaccionRepository.save(t3);
 
+        // --- NUEVO USUARIO (EL AMIGO) ---
+        Usuario user2 = new Usuario();
+        user2.setNombre("Amigo Destinatario");
+        user2.setEmail("amigo@fintech.com"); // <--- A este email le transferirás
+        user2.setPassword("123456");
+        usuarioRepository.save(user2);
+
+        Cuenta cuenta2 = new Cuenta();
+        cuenta2.setNombre("Cuenta de Amigo");
+        cuenta2.setMoneda("ARS");
+        cuenta2.setSaldo(new BigDecimal("1000.00")); // Empieza con poquito
+        cuenta2.setUsuario(user2);
+        cuentaRepository.save(cuenta2);
+
         System.out.println("🚀 DATOS CARGADOS: Usuario, Cuenta y 3 Transacciones.");
     }
 }

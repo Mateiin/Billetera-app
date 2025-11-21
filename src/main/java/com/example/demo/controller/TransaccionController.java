@@ -66,4 +66,46 @@ public class TransaccionController {
 
         return "DEPOSITO_EXITOSO";
     }
+
+    // Clase auxiliar para recibir los datos de la transferencia
+    static class TransferenciaRequest {
+        public String emailOrigen;
+        public String emailDestino;
+        public java.math.BigDecimal monto;
+    }
+
+    @PostMapping("/transferencia")
+    public String transferir(@RequestBody TransferenciaRequest request) {
+        // 1. Validaciones básicas
+        Usuario origen = usuarioRepository.findByEmail(request.emailOrigen);
+        Usuario destino = usuarioRepository.findByEmail(request.emailDestino);
+
+        if (origen == null || destino == null) return "ERROR_USUARIO";
+        
+        // Buscamos las cuentas
+        Cuenta cuentaOrigen = cuentaRepository.findByUsuarioId(origen.getId()).get(0);
+        Cuenta cuentaDestino = cuentaRepository.findByUsuarioId(destino.getId()).get(0);
+
+        // 2. ¿Tiene saldo suficiente? ( saldo < monto )
+        if (cuentaOrigen.getSaldo().compareTo(request.monto) < 0) {
+            return "ERROR_SALDO";
+        }
+
+        // 3. LA MAGIA: Restar a uno y Sumar al otro
+        cuentaOrigen.setSaldo(cuentaOrigen.getSaldo().subtract(request.monto));
+        cuentaDestino.setSaldo(cuentaDestino.getSaldo().add(request.monto));
+        
+        cuentaRepository.save(cuentaOrigen);
+        cuentaRepository.save(cuentaDestino);
+
+        // 4. Generar el historial (Solo generamos el gasto para el que envía por ahora)
+        Transaccion t = new Transaccion();
+        t.setDescripcion("Transferencia a " + destino.getNombre());
+        t.setMonto(request.monto);
+        t.setTipo("GASTO");
+        t.setCuenta(cuentaOrigen);
+        transaccionRepository.save(t);
+
+        return "TRANSFERENCIA_EXITOSA";
+    }
 }
