@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Billetera</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #f0f2f5; margin: 0; display: flex; justify-content: center; }
+        .app-container { width: 100%; max-width: 400px; background: white; min-height: 100vh; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        
+        /* Cabecera */
+        .header { background-color: #007bff; color: white; padding: 20px; text-align: center; border-bottom-left-radius: 20px; border-bottom-right-radius: 20px; }
+        .welcome-text { font-size: 14px; opacity: 0.9; }
+        .user-name { font-weight: bold; font-size: 18px; margin-top: 5px; }
+
+        /* Tarjeta de Saldo */
+        .balance-card { background: white; margin: -30px 20px 20px 20px; padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-align: center; }
+        .balance-label { color: #666; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .balance-amount { font-size: 32px; font-weight: bold; color: #333; margin: 10px 0; }
+        .currency { font-size: 20px; color: #888; }
+
+        /* Botones de Acción */
+        .actions { display: flex; justify-content: space-around; padding: 10px 20px; }
+        .action-btn { display: flex; flex-direction: column; align-items: center; background: none; border: none; cursor: pointer; }
+        .btn-icon { width: 50px; height: 50px; background-color: #e3f2fd; border-radius: 50%; display: flex; justify-content: center; align-items: center; color: #007bff; font-size: 24px; margin-bottom: 5px; transition: 0.2s; }
+        .btn-label { font-size: 12px; color: #555; }
+        .action-btn:hover .btn-icon { background-color: #007bff; color: white; }
+
+        /* Lista de Movimientos */
+        .transactions { padding: 20px; }
+        .section-title { font-size: 16px; font-weight: bold; margin-bottom: 15px; color: #333; }
+        .transaction-item { display: flex; justify-content: space-between; padding: 15px 0; border-bottom: 1px solid #eee; }
+        .t-info { display: flex; flex-direction: column; }
+        .t-desc { font-weight: 500; color: #333; }
+        .t-date { font-size: 12px; color: #999; }
+        .t-amount { font-weight: bold; }
+        .negative { color: #dc3545; }
+        .positive { color: #28a745; }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <div class="header">
+            <div class="welcome-text">Hola de nuevo,</div>
+            <div class="user-name" id="nombreUsuario">Cargando...</div>
+        </div>
+
+        <div class="balance-card">
+            <div class="balance-label">Tu Saldo Disponible</div>
+            <div class="balance-amount">$ <span id="saldo">0.00</span> <span class="currency">ARS</span></div>
+        </div>
+
+        <div class="actions">
+            <button class="action-btn">
+                <div class="btn-icon">+</div>
+                <span class="btn-label">Ingresar</span>
+            </button>
+            <button class="action-btn">
+                <div class="btn-icon">➜</div>
+                <span class="btn-label">Transferir</span>
+            </button>
+            <button class="action-btn">
+                <div class="btn-icon">📅</div>
+                <span class="btn-label">Historial</span>
+            </button>
+        </div>
+
+        <div class="transactions">
+            <div class="section-title">Últimos movimientos</div>
+            <div id="lista-movimientos"></div>
+                </div>
+        </div>
+    </div>
+
+<script>
+        const emailGuardado = localStorage.getItem('emailUsuario');
+        
+        if(!emailGuardado) {
+            window.location.href = "iniciosesion.html"; 
+        } else {
+            document.getElementById('nombreUsuario').innerText = emailGuardado;
+            cargarSaldo(emailGuardado);
+            cargarMovimientos(emailGuardado); // <--- NUEVA LLAMADA
+        }
+
+        async function cargarSaldo(email) {
+            try {
+                const response = await fetch(`/api/cuentas/saldo?email=${email}`);
+                if (response.ok) {
+                    const saldo = await response.json();
+                    document.getElementById('saldo').innerText = saldo.toLocaleString('es-AR', { minimumFractionDigits: 2 });
+                }
+            } catch (error) { console.error(error); }
+        }
+
+        // --- NUEVA FUNCIÓN PARA LISTAR MOVIMIENTOS ---
+        async function cargarMovimientos(email) {
+            try {
+                const response = await fetch(`/api/transacciones?email=${email}`);
+                if (response.ok) {
+                    const movimientos = await response.json();
+                    const listaDiv = document.getElementById('lista-movimientos');
+                    listaDiv.innerHTML = ""; // Limpiamos cualquier cosa previa
+
+                    // Recorremos cada movimiento que vino de la base de datos
+                    movimientos.forEach(mov => {
+                        // Decidimos el color: rojo si es GASTO, verde si es INGRESO
+                        const claseColor = mov.tipo === "GASTO" ? "negative" : "positive";
+                        const signo = mov.tipo === "GASTO" ? "-" : "+";
+
+                        // Formateamos la fecha
+                        const fecha = new Date(mov.fecha).toLocaleDateString();
+
+                        // Creamos el HTML de la fila
+                        const itemHtml = `
+                            <div class="transaction-item">
+                                <div class="t-info">
+                                    <span class="t-desc">${mov.descripcion}</span>
+                                    <span class="t-date">${fecha}</span>
+                                </div>
+                                <div class="t-amount ${claseColor}">
+                                    ${signo} $ ${mov.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                                </div>
+                            </div>
+                        `;
+                        // Lo agregamos a la pantalla
+                        listaDiv.innerHTML += itemHtml;
+                    });
+                }
+            } catch (error) { console.error(error); }
+        }
+    </script>
+
+</body>
+</html>
