@@ -52,7 +52,7 @@
         </div>
 
         <div class="actions">
-            <button class="action-btn">
+            <button class="action-btn" onclick="ingresarDinero()">
                 <div class="btn-icon">+</div>
                 <span class="btn-label">Ingresar</span>
             </button>
@@ -129,6 +129,51 @@
                     });
                 }
             } catch (error) { console.error(error); }
+        }
+        // --- FUNCIÓN PARA INGRESAR DINERO ---
+        async function ingresarDinero() {
+            // 1. Pedimos el monto al usuario (usamos prompt por simplicidad)
+            const montoStr = prompt("¿Cuánto dinero quieres ingresar?");
+            
+            // Si el usuario cancela o lo deja vacío, no hacemos nada
+            if (!montoStr) return;
+
+            // Convertimos el texto a número decimal
+            const monto = parseFloat(montoStr);
+
+            if (isNaN(monto) || monto <= 0) {
+                alert("Por favor, ingresa un monto válido.");
+                return;
+            }
+
+            // 2. Enviamos la petición al Backend
+            const email = localStorage.getItem('emailUsuario');
+            
+            try {
+                const response = await fetch('/api/transacciones/deposito', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        email: email,
+                        monto: monto
+                    })
+                });
+
+                const resultado = await response.text();
+
+                if (resultado === "DEPOSITO_EXITOSO") {
+                    alert("¡Dinero acreditado con éxito!");
+                    // 3. Recargamos los datos de la pantalla para ver el cambio
+                    cargarSaldo(email);
+                    cargarMovimientos(email);
+                } else {
+                    alert("Hubo un error al procesar el depósito.");
+                }
+
+            } catch (error) {
+                console.error(error);
+                alert("Error de conexión.");
+            }
         }
     </script>
 

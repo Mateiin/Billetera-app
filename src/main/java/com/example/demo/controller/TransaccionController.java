@@ -32,4 +32,38 @@ public class TransaccionController {
         }
         return new ArrayList<>(); // Si no hay nada, devolvemos lista vacía
     }
+    // 1. Clase auxiliar para recibir los datos del depósito
+    static class TransaccionRequest {
+        public String email;
+        public java.math.BigDecimal monto;
+    }
+
+    // 2. El Endpoint para DEPOSITAR dinero
+    @PostMapping("/deposito")
+    public String depositar(@RequestBody TransaccionRequest request) {
+        System.out.println("💰 Intento de depósito: " + request.monto + " para " + request.email);
+
+        // A. Buscamos usuario y cuenta
+        Usuario user = usuarioRepository.findByEmail(request.email);
+        if (user == null) return "ERROR_USUARIO";
+        
+        List<Cuenta> cuentas = cuentaRepository.findByUsuarioId(user.getId());
+        if (cuentas.isEmpty()) return "ERROR_CUENTA";
+        
+        Cuenta cuenta = cuentas.get(0); // Usamos la cuenta principal
+
+        // B. Actualizamos el saldo (Saldo Actual + Depósito)
+        cuenta.setSaldo(cuenta.getSaldo().add(request.monto));
+        cuentaRepository.save(cuenta); // Guardamos el nuevo saldo en BD
+
+        // C. Creamos el registro del movimiento (Para el historial)
+        Transaccion t = new Transaccion();
+        t.setDescripcion("Ingreso de Dinero");
+        t.setMonto(request.monto);
+        t.setTipo("INGRESO");
+        t.setCuenta(cuenta); // Relacionamos con la cuenta
+        transaccionRepository.save(t); // Guardamos la transacción en BD
+
+        return "DEPOSITO_EXITOSO";
+    }
 }
