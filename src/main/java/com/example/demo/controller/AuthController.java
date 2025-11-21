@@ -45,4 +45,41 @@ public class AuthController {
             return "LOGIN_FALLIDO";
         }
     }
+
+    // 1. DTO para recibir los datos de registro
+    static class RegisterRequest {
+        public String nombre;
+        public String email;
+        public String password;
+    }
+
+    // Necesitamos el repositorio de Cuentas para darle la bienvenida
+    @Autowired
+    private com.example.demo.repository.CuentaRepository cuentaRepository;
+
+    // 2. Endpoint de Registro
+    @PostMapping("/register")
+    public String registrar(@RequestBody RegisterRequest request) {
+        // A. Validar si el email ya existe
+        if (usuarioRepository.findByEmail(request.email) != null) {
+            return "ERROR_EMAIL_DUPLICADO";
+        }
+
+        // B. Crear el Usuario
+        Usuario user = new Usuario();
+        user.setNombre(request.nombre);
+        user.setEmail(request.email);
+        user.setPassword(request.password);
+        usuarioRepository.save(user); // Guardamos usuario
+
+        // C. Crear su Cuenta Automáticamente (¡Importante!)
+        com.example.demo.model.Cuenta cuenta = new com.example.demo.model.Cuenta();
+        cuenta.setNombre("Cuenta Principal");
+        cuenta.setMoneda("ARS");
+        cuenta.setSaldo(new java.math.BigDecimal("0.00")); // Empieza en cero
+        cuenta.setUsuario(user);
+        cuentaRepository.save(cuenta); // Guardamos cuenta
+
+        return "REGISTRO_EXITOSO";
+    }
 }

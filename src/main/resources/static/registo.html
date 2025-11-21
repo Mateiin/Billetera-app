@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Nexus Wallet</title>
+    <title>Registro - Nexus Wallet</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -12,9 +12,9 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #09090b; /* Zinc 950 */
+            background-color: #09090b;
             color: #f4f4f5;
-            overflow: hidden; /* Para que el brillo de fondo no genere scroll */
+            overflow: hidden;
         }
         .glass-card {
             background: rgba(255, 255, 255, 0.03);
@@ -22,7 +22,6 @@
             -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
-        /* Animación de entrada suave */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -32,115 +31,122 @@
 </head>
 <body class="min-h-screen flex items-center justify-center relative">
 
-    <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-indigo-500/20 rounded-full blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="absolute top-0 right-1/2 translate-x-1/2 w-[500px] h-[500px] bg-purple-500/20 rounded-full blur-[120px] pointer-events-none"></div>
+    <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/10 rounded-full blur-[100px] pointer-events-none"></div>
 
     <div class="w-full max-w-md p-8 mx-4 glass-card rounded-3xl shadow-2xl animate-enter relative z-10">
         
         <div class="text-center mb-8">
-            <div class="w-12 h-12 bg-white text-black rounded-xl mx-auto flex items-center justify-center mb-4 shadow-lg shadow-white/10">
-                <i data-lucide="wallet" class="w-6 h-6"></i>
+            <div class="w-12 h-12 bg-white text-black rounded-xl mx-auto flex items-center justify-center mb-4 shadow-lg">
+                <i data-lucide="user-plus" class="w-6 h-6"></i>
             </div>
-            <h1 class="text-2xl font-semibold tracking-tight text-white">Bienvenido a Nexus</h1>
-            <p class="text-zinc-500 text-sm mt-2">Ingresa tus credenciales para acceder</p>
+            <h1 class="text-2xl font-semibold tracking-tight text-white">Crear Cuenta</h1>
+            <p class="text-zinc-500 text-sm mt-2">Únete a Nexus Wallet hoy mismo</p>
         </div>
 
-        <form id="loginForm" class="space-y-5">
+        <form id="registroForm" class="space-y-5">
             
+            <div class="space-y-2">
+                <label for="nombre" class="text-sm font-medium text-zinc-300 ml-1">Nombre Completo</label>
+                <div class="relative group">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-white transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                    </div>
+                    <input type="text" id="nombre" required placeholder="Ej: Juan Perez"
+                        class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all">
+                </div>
+            </div>
+
             <div class="space-y-2">
                 <label for="email" class="text-sm font-medium text-zinc-300 ml-1">Correo Electrónico</label>
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-white transition-colors">
                         <i data-lucide="mail" class="w-5 h-5"></i>
                     </div>
-                    <input type="email" id="email" name="email" placeholder="admin@fintech.com" required
+                    <input type="email" id="email" required placeholder="tu@email.com"
                         class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all">
                 </div>
             </div>
 
             <div class="space-y-2">
-                <div class="flex justify-between items-center ml-1">
-                    <label for="password" class="text-sm font-medium text-zinc-300">Contraseña</label>
-                    <a href="#" class="text-xs text-zinc-500 hover:text-white transition-colors">¿Olvidaste tu clave?</a>
-                </div>
+                <label for="password" class="text-sm font-medium text-zinc-300 ml-1">Contraseña</label>
                 <div class="relative group">
                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-500 group-focus-within:text-white transition-colors">
                         <i data-lucide="lock" class="w-5 h-5"></i>
                     </div>
-                    <input type="password" id="password" name="password" placeholder="••••••" required
+                    <input type="password" id="password" required placeholder="••••••"
                         class="w-full bg-black/20 border border-white/10 rounded-xl py-3 pl-10 pr-4 text-white placeholder:text-zinc-600 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all">
                 </div>
             </div>
 
             <div id="mensaje" class="text-center text-sm min-h-[20px] font-medium"></div>
 
-            <button type="submit" id="btnIngresar" 
+            <button type="submit" id="btnRegistrar" 
                 class="w-full bg-white text-black font-medium rounded-xl py-3 hover:bg-zinc-200 transition-all transform active:scale-[0.98] flex items-center justify-center gap-2">
-                <span>Ingresar</span>
+                <span>Registrarse</span>
                 <i data-lucide="arrow-right" class="w-4 h-4"></i>
             </button>
 
         </form>
 
         <div class="mt-8 text-center text-sm text-zinc-500">
-            ¿No tienes una cuenta? 
-            <a href="registo.html" class="text-white hover:underline underline-offset-4">Crear cuenta</a>
+            ¿Ya tienes cuenta? 
+            <a href="iniciosesion.html" class="text-white hover:underline underline-offset-4">Iniciar Sesión</a>
         </div>
     </div>
 
     <script>
         lucide.createIcons();
 
-        const loginForm = document.getElementById('loginForm');
+        const registroForm = document.getElementById('registroForm');
         const mensajeDiv = document.getElementById('mensaje');
-        const btnIngresar = document.getElementById('btnIngresar');
+        const btnRegistrar = document.getElementById('btnRegistrar');
 
-        loginForm.addEventListener('submit', async (e) => {
+        registroForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const emailValue = document.getElementById('email').value;
-            const passwordValue = document.getElementById('password').value;
+            const nombre = document.getElementById('nombre').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-            const dataToSend = { email: emailValue, password: passwordValue };
-
-            // Efecto visual de carga
-            mensajeDiv.textContent = "Verificando credenciales...";
+            mensajeDiv.textContent = "Creando cuenta...";
             mensajeDiv.className = "text-zinc-400";
-            btnIngresar.disabled = true;
-            btnIngresar.style.opacity = "0.7";
+            btnRegistrar.disabled = true;
+            btnRegistrar.style.opacity = "0.7";
 
             try {
-                const response = await fetch('/api/auth/login', {
+                const response = await fetch('/api/auth/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(dataToSend)
+                    body: JSON.stringify({ nombre, email, password })
                 });
 
-                const resultadoTexto = await response.text();
+                const resultado = await response.text();
 
-                if (resultadoTexto === "LOGIN_EXITOSO") {
-                    mensajeDiv.textContent = "¡Acceso concedido! Redirigiendo...";
+                if (resultado === "REGISTRO_EXITOSO") {
+                    mensajeDiv.textContent = "¡Cuenta creada! Redirigiendo...";
                     mensajeDiv.className = "text-emerald-400";
                     
-                    localStorage.setItem('emailUsuario', emailValue);
-
+                    // Esperamos un segundo y vamos al login
                     setTimeout(() => {
-                        window.location.href = "/home.html";
-                    }, 800); // Pequeña pausa para ver el mensaje de éxito
+                        window.location.href = "iniciosesion.html";
+                    }, 1500);
                     
-                } else {
-                    mensajeDiv.textContent = "Credenciales incorrectas.";
+                } else if (resultado === "ERROR_EMAIL_DUPLICADO") {
+                    mensajeDiv.textContent = "Ese email ya está registrado.";
                     mensajeDiv.className = "text-red-400";
-                    btnIngresar.disabled = false;
-                    btnIngresar.style.opacity = "1";
+                    btnRegistrar.disabled = false;
+                    btnRegistrar.style.opacity = "1";
+                } else {
+                    throw new Error("Error desconocido");
                 }
 
             } catch (error) {
-                console.error('Error:', error);
-                mensajeDiv.textContent = "Error de conexión.";
+                console.error(error);
+                mensajeDiv.textContent = "Error al registrarse.";
                 mensajeDiv.className = "text-red-400";
-                btnIngresar.disabled = false;
-                btnIngresar.style.opacity = "1";
+                btnRegistrar.disabled = false;
+                btnRegistrar.style.opacity = "1";
             }
         });
     </script>
