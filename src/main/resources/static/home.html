@@ -4,30 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nexus Wallet</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #18181b; /* Zinc 950 */
-            color: #f4f4f5; /* Zinc 100 */
-        }
-        
-        /* Efecto Vidrio (Glassmorphism) */
+        body { font-family: 'Inter', sans-serif; background-color: #09090b; color: #f4f4f5; }
         .glass-card {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.03);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        /* Animaciones suaves */
-        .transition-all { transition: all 0.3s ease; }
     </style>
 </head>
 <body class="min-h-screen p-4 md:p-8 flex justify-center">
@@ -44,64 +30,89 @@
                     <p class="text-zinc-500 text-xs uppercase tracking-wider mt-1">Nexus ID: 8492-2025</p>
                 </div>
             </div>
-            <button onclick="cerrarSesion()" 
-                class="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-400 hover:text-white transition-all cursor-pointer" 
-                aria-label="Cerrar sesión">
+            <button onclick="cerrarSesion()" class="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-zinc-400 hover:text-white transition-all cursor-pointer">
                 <i data-lucide="log-out" class="w-5 h-5"></i>
             </button>
         </header>
 
         <div class="grid md:grid-cols-3 gap-6">
             
-            <div class="md:col-span-2 glass-card rounded-3xl p-8 relative overflow-hidden group">
-                <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 transition-opacity group-hover:opacity-75 pointer-events-none"></div>
-
-                <div class="relative z-10 flex flex-col justify-between h-full min-h-[200px]">
-                    <div>
-                        <p class="text-zinc-400 font-medium mb-2">Saldo Disponible</p>
-                        <h3 class="text-5xl md:text-6xl font-light tracking-tighter tabular-nums text-white">
-                            $ <span id="saldo">...</span> <span class="text-zinc-500 text-3xl">ARS</span>
+            <div class="md:col-span-2 space-y-6">
+                
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <p class="text-zinc-400 font-medium">Caja de Ahorro</p>
+                            <span class="bg-zinc-800 text-xs px-2 py-1 rounded text-zinc-300">ARS</span>
+                        </div>
+                        <h3 class="text-5xl font-light tracking-tighter tabular-nums text-white mb-6">
+                            $ <span id="saldoArs">...</span>
                         </h3>
-                    </div>
-
-                    <div class="flex items-center gap-2 mt-8">
-                        <span class="flex items-center gap-1 text-emerald-400 bg-emerald-400/10 px-3 py-1 rounded-full text-sm font-medium border border-emerald-400/20">
-                            <i data-lucide="activity" class="w-3 h-3"></i> +2.4%
-                        </span>
-                        <span class="text-zinc-500 text-sm">vs mes pasado</span>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                <p class="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">CBU</p>
+                                <p class="text-white font-mono text-xs truncate" id="cbuArs">Cargando...</p>
+                            </div>
+                            <div class="bg-black/20 p-3 rounded-xl border border-white/5">
+                                <p class="text-[10px] text-zinc-500 uppercase tracking-wider mb-1">Alias</p>
+                                <p class="text-emerald-400 font-mono text-xs truncate" id="aliasArs">Cargando...</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
+                <div class="glass-card rounded-3xl p-8 relative overflow-hidden group border-emerald-900/30">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-16 -mt-16 pointer-events-none"></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-4">
+                            <p class="text-emerald-400/80 font-medium">Cuenta Dólares</p>
+                            <span class="bg-emerald-950 text-xs px-2 py-1 rounded text-emerald-400 border border-emerald-900">USD</span>
+                        </div>
+                        <h3 class="text-5xl font-light tracking-tighter tabular-nums text-emerald-100 mb-6">
+                            u$s <span id="saldoUsd">...</span>
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-emerald-950/30 p-3 rounded-xl border border-emerald-900/20">
+                                <p class="text-[10px] text-emerald-600 uppercase tracking-wider mb-1">CBU</p>
+                                <p class="text-emerald-100 font-mono text-xs truncate" id="cbuUsd">Cargando...</p>
+                            </div>
+                            <div class="bg-emerald-950/30 p-3 rounded-xl border border-emerald-900/20">
+                                <p class="text-[10px] text-emerald-600 uppercase tracking-wider mb-1">Alias</p>
+                                <p class="text-emerald-400 font-mono text-xs truncate" id="aliasUsd">Cargando...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
             <div class="md:col-span-1 space-y-4">
-                <button onclick="ingresarDinero()" class="w-full h-[calc(50%-8px)] bg-white text-black rounded-3xl p-6 flex flex-col items-start justify-between hover:bg-zinc-200 transition-colors group cursor-pointer">
-                    <div class="p-3 bg-black/5 rounded-full">
-                        <i data-lucide="plus" class="w-6 h-6"></i>
-                    </div>
-                    <div class="text-left">
-                        <span class="text-lg font-medium block">Ingresar</span>
-                        <span class="text-black/60 text-sm">Dinero a cuenta</span>
-                    </div>
+                
+                <button onclick="ingresarDinero()" class="w-full h-32 bg-white text-black rounded-3xl p-6 flex flex-col items-start justify-between hover:bg-zinc-200 transition-colors cursor-pointer">
+                    <div class="p-2 bg-black/5 rounded-full"><i data-lucide="plus" class="w-6 h-6"></i></div>
+                    <span class="font-medium">Ingresar Pesos</span>
                 </button>
 
-                <button onclick="transferirDinero()" class="w-full h-[calc(50%-8px)] glass-card hover:bg-white/10 rounded-3xl p-6 flex flex-col items-start justify-between transition-colors group cursor-pointer">
-                    <div class="p-3 bg-white/10 rounded-full text-white">
-                        <i data-lucide="send" class="w-6 h-6"></i>
+                <button onclick="transferirDinero()" class="w-full h-32 glass-card hover:bg-white/10 rounded-3xl p-6 flex flex-col items-start justify-between transition-colors cursor-pointer">
+                    <div class="p-2 bg-white/10 rounded-full text-white"><i data-lucide="send" class="w-6 h-6"></i></div>
+                    <span class="font-medium text-white">Transferir</span>
+                </button>
+                
+                <button onclick="comprarDolares()" id="btnComprar" class="w-full h-24 border border-emerald-800/50 bg-emerald-950/10 rounded-3xl p-6 flex flex-col justify-center items-start gap-1 cursor-pointer hover:bg-emerald-900/20 transition-all">
+                    <div class="flex items-center gap-2 text-emerald-500">
+                        <i data-lucide="dollar-sign" class="w-5 h-5"></i>
+                        <span class="font-medium">Comprar USD</span>
                     </div>
-                    <div class="text-left">
-                        <span class="text-lg font-medium block text-white">Transferir</span>
-                        <span class="text-zinc-400 text-sm">Enviar a contacto</span>
-                    </div>
+                    <p class="text-xs text-emerald-400/70">
+                        Cotización: $ <span id="precioDolar">Cargando...</span>
+                    </p>
                 </button>
             </div>
         </div>
 
         <div class="glass-card rounded-3xl p-8 mt-6">
-            <div class="flex items-center justify-between mb-6">
-                <h3 class="text-xl font-light text-white">Transacciones Recientes</h3>
-                <button class="text-sm text-zinc-400 hover:text-white transition-colors">Ver todo</button>
-            </div>
-
+            <h3 class="text-xl font-light text-white mb-6">Transacciones Recientes</h3>
             <div id="lista-movimientos" class="space-y-4">
                 <p class="text-zinc-500 text-center">Cargando movimientos...</p>
             </div>
@@ -109,51 +120,42 @@
     </div>
 
     <script>
-        // Inicializar Iconos
         lucide.createIcons();
-
-        // 1. VERIFICAR SESIÓN
         const emailGuardado = localStorage.getItem('emailUsuario');
-        
-        if(!emailGuardado) {
-            window.location.href = "iniciosesion.html"; 
-        } else {
+        if(!emailGuardado) { window.location.href = "iniciosesion.html"; } 
+        else {
             cargarNombre(emailGuardado);
-            cargarSaldo(emailGuardado);
+            cargarDatosCuenta(emailGuardado); 
             cargarMovimientos(emailGuardado);
+            cargarCotizacion(); 
         }
 
-        // 2. CARGAR SALDO
-        async function cargarSaldo(email) {
-            try {
-                const response = await fetch(`/api/cuentas/saldo?email=${email}`);
-                if (response.ok) {
-                    const saldo = await response.json();
-                    document.getElementById('saldo').innerText = saldo.toLocaleString('es-AR', { minimumFractionDigits: 2 });
-                }
-            } catch (error) { console.error(error); }
-        }
-
-        // FUNCIÓN MODIFICADA: Solo el primer nombre
+        // --- FUNCIONES DE CARGA ---
         async function cargarNombre(email) {
             try {
                 const response = await fetch(`/api/usuarios/nombre?email=${email}`);
                 if (response.ok) {
                     const nombreCompleto = await response.text();
-                    
-                    // AQUÍ ESTÁ EL TRUCO:
-                    // 1. split(' ') separa las palabras en una lista ["Mateo", "Caullo"]
-                    // 2. [0] toma la primera palabra ("Mateo")
-                    const primerNombre = nombreCompleto.split(' ')[0]; 
-                    
-                    document.getElementById('nombreUsuario').innerText = primerNombre;
+                    document.getElementById('nombreUsuario').innerText = nombreCompleto.split(' ')[0];
                 }
-            } catch (error) {
-                console.error("Error al cargar nombre:", error);
-            }
+            } catch (error) { console.error(error); }
         }
 
-        // 3. CARGAR MOVIMIENTOS (CON EL NUEVO DISEÑO)
+        async function cargarDatosCuenta(email) {
+            try {
+                const response = await fetch(`/api/cuentas/datos?email=${email}`);
+                if (response.ok) {
+                    const datos = await response.json();
+                    document.getElementById('saldoArs').innerText = datos.saldoArs?.toLocaleString('es-AR', { minimumFractionDigits: 2 }) || "0,00";
+                    document.getElementById('cbuArs').innerText = datos.cbuArs || "No disponible";
+                    document.getElementById('aliasArs').innerText = datos.aliasArs || "No disponible";
+                    document.getElementById('saldoUsd').innerText = datos.saldoUsd?.toLocaleString('en-US', { minimumFractionDigits: 2 }) || "0.00";
+                    document.getElementById('cbuUsd').innerText = datos.cbuUsd || "No disponible";
+                    document.getElementById('aliasUsd').innerText = datos.aliasUsd || "No disponible";
+                }
+            } catch (error) { console.error(error); }
+        }
+
         async function cargarMovimientos(email) {
             try {
                 const response = await fetch(`/api/transacciones?email=${email}`);
@@ -161,107 +163,124 @@
                     const movimientos = await response.json();
                     const listaDiv = document.getElementById('lista-movimientos');
                     listaDiv.innerHTML = ""; 
+                    if(movimientos.length === 0) listaDiv.innerHTML = '<p class="text-zinc-500 text-center">No hay movimientos.</p>';
 
-                    if(movimientos.length === 0) {
-                        listaDiv.innerHTML = '<p class="text-zinc-500 text-center">No hay movimientos aún.</p>';
-                        return;
-                    }
-
-                    // Recorremos y dibujamos con el estilo futurista
                     movimientos.forEach(mov => {
                         const esGasto = mov.tipo === "GASTO";
-                        
-                        // Estilos dinámicos según tipo
-                        const icono = esGasto ? 'arrow-up-right' : 'arrow-down-left';
-                        const colorIconoBg = esGasto ? 'bg-white/5' : 'bg-emerald-500/10';
-                        const colorIconoTxt = esGasto ? 'text-white' : 'text-emerald-400';
-                        const colorMonto = esGasto ? 'text-white' : 'text-emerald-400';
-                        const signo = esGasto ? '-' : '+';
-                        const fecha = new Date(mov.fecha).toLocaleDateString('es-AR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-
                         const itemHtml = `
-                        <div class="flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-colors group border border-transparent hover:border-white/5">
+                        <div class="flex items-center justify-between p-4 hover:bg-white/5 rounded-2xl transition-colors border border-transparent hover:border-white/5">
                             <div class="flex items-center gap-4">
-                                <div class="w-12 h-12 rounded-full flex items-center justify-center border border-white/5 ${colorIconoBg} ${colorIconoTxt}">
-                                    <i data-lucide="${icono}" class="w-5 h-5"></i>
+                                <div class="w-12 h-12 rounded-full flex items-center justify-center border border-white/5 ${esGasto ? 'bg-white/5 text-white' : 'bg-emerald-500/10 text-emerald-400'}">
+                                    <i data-lucide="${esGasto ? 'arrow-up-right' : 'arrow-down-left'}" class="w-5 h-5"></i>
                                 </div>
                                 <div>
-                                    <p class="font-medium text-white group-hover:text-white transition-colors">${mov.descripcion}</p>
-                                    <p class="text-xs text-zinc-500">${fecha}</p>
+                                    <p class="font-medium text-white">${mov.descripcion}</p>
+                                    <p class="text-xs text-zinc-500">${new Date(mov.fecha).toLocaleDateString()}</p>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="font-medium tabular-nums ${colorMonto}">
-                                    ${signo} $${mov.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                                <p class="font-medium tabular-nums ${esGasto ? 'text-white' : 'text-emerald-400'}">
+                                    ${esGasto ? '-' : '+'} $${mov.monto.toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                                 </p>
                                 <p class="text-xs text-zinc-500">Completado</p>
                             </div>
-                        </div>
-                        `;
+                        </div>`;
                         listaDiv.innerHTML += itemHtml;
                     });
-                    // Reiniciamos los iconos para los nuevos elementos agregados
                     lucide.createIcons();
                 }
             } catch (error) { console.error(error); }
         }
 
-        // 4. INGRESAR DINERO
-        async function ingresarDinero() {
-            const montoStr = prompt("¿Cuánto dinero quieres ingresar?");
-            if (!montoStr) return;
-            const monto = parseFloat(montoStr);
-            if (isNaN(monto) || monto <= 0) { alert("Monto inválido."); return; }
-
-            const email = localStorage.getItem('emailUsuario');
+        async function cargarCotizacion() {
             try {
-                const response = await fetch('/api/transacciones/deposito', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: email, monto: monto })
-                });
-
-                if (await response.text() === "DEPOSITO_EXITOSO") {
-                    // alert("¡Dinero acreditado!"); // Quitamos el alert para que sea más fluido
-                    cargarSaldo(email);
-                    cargarMovimientos(email);
-                } else { alert("Error en el depósito."); }
+                const response = await fetch('/api/cotizacion');
+                if (response.ok) {
+                    const datos = await response.json();
+                    window.precioDolarVenta = datos.venta;
+                    document.getElementById('precioDolar').innerText = datos.venta;
+                }
             } catch (error) { console.error(error); }
         }
 
-        // 5. TRANSFERIR DINERO
+        // --- FUNCIONES DE ACCIÓN ---
+
+        async function ingresarDinero() {
+            const monto = parseFloat(prompt("¿Cuánto dinero (ARS) quieres ingresar?"));
+            if (!monto || monto <= 0) return;
+            const email = localStorage.getItem('emailUsuario');
+            
+            await fetch('/api/transacciones/deposito', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email, monto: monto })
+            });
+            cargarDatosCuenta(email);
+            cargarMovimientos(email);
+        }
+
         async function transferirDinero() {
-            const emailDestino = prompt("Ingrese el EMAIL del destinatario:");
-            if (!emailDestino) return;
-            const montoStr = prompt("¿Cuánto desea transferir?");
-            if (!montoStr) return;
-            const monto = parseFloat(montoStr);
-            if (isNaN(monto) || monto <= 0) { alert("Monto inválido."); return; }
+            const destinatario = prompt("Ingrese Email, CBU o Alias:");
+            if (!destinatario) return;
+            const monto = parseFloat(prompt("¿Monto a transferir?"));
+            if (!monto || monto <= 0) return;
 
             const emailOrigen = localStorage.getItem('emailUsuario');
             try {
                 const response = await fetch('/api/transacciones/transferencia', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ emailOrigen: emailOrigen, emailDestino: emailDestino, monto: monto })
+                    body: JSON.stringify({ emailOrigen: emailOrigen, destinatario: destinatario, monto: monto })
                 });
                 const resultado = await response.text();
-
                 if (resultado === "TRANSFERENCIA_EXITOSA") {
-                    alert("¡Transferencia enviada!");
-                    cargarSaldo(emailOrigen);
+                    alert("¡Enviado!");
+                    cargarDatosCuenta(emailOrigen);
                     cargarMovimientos(emailOrigen);
-                } else if (resultado === "ERROR_SALDO") {
-                    alert("❌ No tienes saldo suficiente.");
-                } else { alert("❌ Error: Usuario no encontrado."); }
+                } else { alert("❌ Error: " + resultado); }
             } catch (error) { console.error(error); }
         }
 
-        // 6. CERRAR SESIÓN
-        function cerrarSesion() {
-            localStorage.removeItem('emailUsuario');
-            window.location.href = "iniciosesion.html";
+        // --- COMPRA DE DÓLARES REAL ---
+        async function comprarDolares() {
+            if (!window.precioDolarVenta) { alert("Cargando cotización..."); return; }
+
+            const cantidadDolares = parseFloat(prompt(`Cotización: $${window.precioDolarVenta}\n¿Cuántos DÓLARES quieres comprar?`));
+            
+            if (!cantidadDolares || cantidadDolares <= 0) return;
+
+            // Calculamos el costo estimado para avisarle al usuario
+            const costoEstimado = cantidadDolares * window.precioDolarVenta;
+            const confirma = confirm(`Vas a comprar u$s ${cantidadDolares}\nTe costará $ ${costoEstimado.toLocaleString('es-AR')} ARS.\n¿Confirmar?`);
+
+            if (!confirma) return;
+
+            const email = localStorage.getItem('emailUsuario');
+            try {
+                const response = await fetch('/api/transacciones/compra-dolar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        email: email, 
+                        montoDolares: cantidadDolares, 
+                        precioCotizacion: window.precioDolarVenta 
+                    })
+                });
+
+                const resultado = await response.text();
+                if (resultado === "COMPRA_EXITOSA") {
+                    alert("¡Compra exitosa! Disfruta tus dólares.");
+                    cargarDatosCuenta(email);
+                    cargarMovimientos(email);
+                } else if (resultado === "ERROR_SALDO_ARS") {
+                    alert("❌ No tienes suficientes pesos.");
+                } else {
+                    alert("❌ Error: " + resultado);
+                }
+            } catch (error) { console.error(error); }
         }
+
+        function cerrarSesion() { localStorage.removeItem('emailUsuario'); window.location.href = "iniciosesion.html"; }
     </script>
 </body>
 </html>

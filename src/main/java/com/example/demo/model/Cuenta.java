@@ -31,4 +31,10 @@ public class Cuenta {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @Column(unique = true) // El CBU no se puede repetir
+    private String cbu;
+
+    @Column(unique = true) // El Alias tampoco
+    private String alias;
 }
